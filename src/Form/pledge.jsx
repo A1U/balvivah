@@ -21,11 +21,13 @@ const PledgeSection = () => {
   const [formData, setFormData] = useState({
     name: "",
     mobileNo: "",
-    state: "",
     district: "",
     language: "",
     captchaCode: ""
   });
+
+
+  
 
   // Generate random captcha code
   const generateCaptcha = () => {
@@ -175,40 +177,6 @@ const PledgeSection = () => {
       alert('Error generating certificate. Please try again.');
     }
   };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
