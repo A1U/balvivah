@@ -292,7 +292,7 @@ function HeroSection() {
         <Container>
           <Row className="align-items-stretch">
 
-            <Col lg={9} xs={12} className="position-relative" style={{ minHeight: '280px', minHeight: '380px' }}>
+            <Col lg={9} xs={12} className="position-relative" style={{ minHeight: '380px' }}>
 
               <div className="hero-slider pt-2" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
                 {slides.map((slide) => (

@@ -100,83 +100,17 @@ const PledgeSection = () => {
     }));
   };
 
-  const generatePDF = async () => {
-    try {
-      // Create PDF with custom size: 1082x1521 pixels
-      const pdfWidth = 1082; // pixels
-      const pdfHeight = 1521; // pixels
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'px',
-        format: [pdfWidth, pdfHeight]
-      });
+  // const generatePDF = async () => {
+  //   try {
+  //     const pdfWidth = 1082; 
+  //     const pdfHeight = 1521; 
+  //     const pdf = new jsPDF({
+  //       orientation: 'portrait',
+  //       unit: 'px',
+  //       format: [pdfWidth, pdfHeight]
+  //     });
 
-      // Choose certificate background by selected language (English → Pledge_english.jpg, Hindi → Pledge_hindi.jpg)
-      const certificateBg = formData.language === "हिन्दी" ? pledgeBgHindi : pledgeBgEnglish;
-
-      // Get name position based on selected language
-      const currentNamePosition = formData.language === "हिन्दी"
-        ? namePositions.hindi
-        : namePositions.english;
-
-      // Load and add certificate background image
-      const img = new Image();
-
-      return new Promise((resolve, reject) => {
-        img.onload = () => {
-          try {
-            // Add background image to cover entire PDF
-            pdf.addImage(img, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-
-            // Set font for name
-            pdf.setFontSize(45);
-            pdf.setFont('helvetica', 'bold');
-            pdf.setTextColor(185, 32, 34); // Color #b92022
-
-            // Add name with position based on certificate language
-            if (formData.name) {
-              // Calculate X position: use custom x if provided, otherwise center horizontally
-              let xPosition;
-              if (currentNamePosition.x !== null && currentNamePosition.x !== undefined) {
-                xPosition = currentNamePosition.x;
-              } else {
-                // Auto-center horizontally
-                const textWidth = pdf.getTextWidth(formData.name);
-                xPosition = (pdfWidth - textWidth) / 2;
-              }
-
-              // Use Y position from language-specific settings
-              const yPosition = currentNamePosition.y !== null && currentNamePosition.y !== undefined
-                ? currentNamePosition.y
-                : pdfHeight * 0.6; // Fallback to 60% from top
-
-              pdf.text(formData.name, xPosition, yPosition);
-            }
-
-            // Generate PDF blob
-            const pdfBlob = pdf.output('blob');
-            setPdfBlob(URL.createObjectURL(pdfBlob));
-            setShowModal(true);
-            resolve();
-          } catch (error) {
-            console.error('Error adding image to PDF:', error);
-            reject(error);
-          }
-        };
-
-        img.onerror = (error) => {
-          console.error('Error loading certificate image:', error);
-          alert('Error loading certificate image. Please check if the image file exists.');
-          reject(error);
-        };
-
-        img.src = certificateBg;
-      });
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Error generating certificate. Please try again.');
-    }
-  };
+ 
 
 
 
