@@ -1,3 +1,5 @@
+ import React from 'react';
+
 import { useState, useRef, useEffect } from 'react';
 import { FaComments, FaTimes, FaPaperPlane } from 'react-icons/fa';
 import aanandi from './assets/images/aanandi.png';
