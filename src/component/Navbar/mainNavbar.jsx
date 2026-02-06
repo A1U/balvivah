@@ -92,7 +92,9 @@ const MainNavbar = () => {
                 <NavDropdown.Item href="#">SJPU Modules</NavDropdown.Item>
                 <NavDropdown.Item href="#">Stakeholder Modules</NavDropdown.Item>
                 <NavDropdown.Item href="#">Online Refresher Capsules</NavDropdown.Item>
-                <NavDropdown.Item href="#">Other</NavDropdown.Item>
+                {/* <NavDropdown.Item href="#">Other</NavDropdown.Item> */}
+                <NavDropdown.Item as={Link} to="/other">Other</NavDropdown.Item>
+
               </NavDropdown>
 
               <Nav.Link as={Link} to="/photos" className={`nav-link-custom ${isActive("/photos") ? "active" : ""}`}>
