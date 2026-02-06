@@ -42,6 +42,7 @@ import PrivacyPolicy from './pages/privacyPolicy'
 import ReportChilMarriage from './pages/report_child_marriage'
 import { LanguageProvider } from './context/languageContext'
 import DCPUTable from './pages/capacityBuilding/other'
+import Admin from './admin'
 // import Pcma from './pages/Resourse/pcma'
 
 function App() {
@@ -86,6 +87,8 @@ function App() {
           <Route path='/privacy-policy' element={<PrivacyPolicy />} />
                 <Route path='/report_chile_marriage' element={<ReportChilMarriage />} />
                                 <Route path='/other' element={<DCPUTable />} />
+                                                                <Route path='/admin' element={<Admin />} />
+
 
                 
 

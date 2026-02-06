@@ -6,11 +6,16 @@ import pledgeBgHindi from "../assets/images/Pledge_hindi.jpg";
 import jsPDF from "jspdf";
 
 const PledgeSection = () => {
+
+  const [showCertificateModal, setShowCertificateModal] = useState(false);
+  const [certificateImage, setCertificateImage] = useState(null);
+
+
   const [pledgeTaken, setPledgeTaken] = useState(false);
 
   const handleTakePledge = () => {
-  setPledgeTaken(true);
-};
+    setPledgeTaken(true);
+  };
 
 
   const [formData, setFormData] = useState({
@@ -36,7 +41,7 @@ const PledgeSection = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [pdfBlob, setPdfBlob] = useState(null);
-  
+
   // Name positions for different certificate backgrounds
   // x: null means auto-center horizontally, y: vertical position in pixels
   const namePositions = {
@@ -106,26 +111,26 @@ const PledgeSection = () => {
 
       // Choose certificate background by selected language (English → Pledge_english.jpg, Hindi → Pledge_hindi.jpg)
       const certificateBg = formData.language === "हिन्दी" ? pledgeBgHindi : pledgeBgEnglish;
-      
+
       // Get name position based on selected language
-      const currentNamePosition = formData.language === "हिन्दी" 
-        ? namePositions.hindi 
+      const currentNamePosition = formData.language === "हिन्दी"
+        ? namePositions.hindi
         : namePositions.english;
 
       // Load and add certificate background image
       const img = new Image();
-      
+
       return new Promise((resolve, reject) => {
         img.onload = () => {
           try {
             // Add background image to cover entire PDF
             pdf.addImage(img, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-            
+
             // Set font for name
             pdf.setFontSize(45);
             pdf.setFont('helvetica', 'bold');
             pdf.setTextColor(185, 32, 34); // Color #b92022
-            
+
             // Add name with position based on certificate language
             if (formData.name) {
               // Calculate X position: use custom x if provided, otherwise center horizontally
@@ -137,15 +142,15 @@ const PledgeSection = () => {
                 const textWidth = pdf.getTextWidth(formData.name);
                 xPosition = (pdfWidth - textWidth) / 2;
               }
-              
+
               // Use Y position from language-specific settings
-              const yPosition = currentNamePosition.y !== null && currentNamePosition.y !== undefined 
-                ? currentNamePosition.y 
+              const yPosition = currentNamePosition.y !== null && currentNamePosition.y !== undefined
+                ? currentNamePosition.y
                 : pdfHeight * 0.6; // Fallback to 60% from top
-              
+
               pdf.text(formData.name, xPosition, yPosition);
             }
-            
+
             // Generate PDF blob
             const pdfBlob = pdf.output('blob');
             setPdfBlob(URL.createObjectURL(pdfBlob));
@@ -156,13 +161,13 @@ const PledgeSection = () => {
             reject(error);
           }
         };
-        
+
         img.onerror = (error) => {
           console.error('Error loading certificate image:', error);
           alert('Error loading certificate image. Please check if the image file exists.');
           reject(error);
         };
-        
+
         img.src = certificateBg;
       });
     } catch (error) {
@@ -171,43 +176,191 @@ const PledgeSection = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    if (!formData.name.trim()) {
-      alert('Please enter your name');
-      return;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const generateCertificate = async () => {
+    try {
+      // Choose certificate background by selected language
+      const certificateBg = formData.language === "हिन्दी" ? pledgeBgHindi : pledgeBgEnglish;
+
+      // Get name position based on selected language
+      const currentNamePosition = formData.language === "हिन्दी"
+        ? namePositions.hindi
+        : namePositions.english;
+
+      // Create canvas to draw certificate
+      const canvas = document.createElement('canvas');
+      canvas.width = 1082;
+      canvas.height = 1521;
+      const ctx = canvas.getContext('2d');
+
+      // Load background image
+      const img = new Image();
+
+      return new Promise((resolve, reject) => {
+        img.onload = () => {
+          try {
+            // Draw background
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+            // Set font for name
+            ctx.font = 'bold 45px Arial, Helvetica, sans-serif';
+            ctx.fillStyle = '#b92022';
+            ctx.textAlign = 'center';
+
+            // Add name
+            if (formData.name) {
+              const xPosition = currentNamePosition.x !== null && currentNamePosition.x !== undefined
+                ? currentNamePosition.x
+                : canvas.width / 2;
+
+              const yPosition = currentNamePosition.y !== null && currentNamePosition.y !== undefined
+                ? currentNamePosition.y
+                : canvas.height * 0.6;
+
+              ctx.fillText(formData.name, xPosition, yPosition);
+            }
+
+            // Convert canvas to image
+            const certificateDataUrl = canvas.toDataURL('image/jpeg', 0.95);
+            setCertificateImage(certificateDataUrl);
+            setShowCertificateModal(true);
+            resolve();
+          } catch (error) {
+            console.error('Error creating certificate:', error);
+            reject(error);
+          }
+        };
+
+        img.onerror = (error) => {
+          console.error('Error loading certificate image:', error);
+          alert('Error loading certificate image. Please try again.');
+          reject(error);
+        };
+
+        img.src = certificateBg;
+      });
+    } catch (error) {
+      console.error('Error generating certificate:', error);
+      alert('Error generating certificate. Please try again.');
     }
-    
-    if (!formData.mobileNo.trim()) {
-      alert('Please enter your mobile number');
-      return;
-    }
-    
-    if (!/^\d{10}$/.test(formData.mobileNo.trim())) {
-      alert('Please enter a valid 10-digit mobile number');
-      return;
-    }
-    
-    // if (!formData.state) {
-    //   alert('Please select your state');
-    //   return;
-    // }
-    
-    if (!formData.language) {
-      alert('Please select a language');
-      return;
-    }
-    
-    if (captcha.toUpperCase() !== formData.captchaCode.toUpperCase()) {
-      alert('Captcha code does not match');
-      setCaptcha(generateCaptcha());
-      setFormData(prev => ({ ...prev, captchaCode: '' }));
-      return;
-    }
-    
-    generatePDF();
   };
+
+
+
+
+  const handleSubmits = async (e) => {
+    e.preventDefault();
+
+    // Validate captcha
+    if (formData.captchaCode.toUpperCase() !== captcha) {
+      alert('Invalid captcha code. Please try again.');
+      refreshCaptcha();
+      return;
+    }
+
+    // Generate and show certificate
+    await generateCertificate();
+
+    // Reset form
+    setFormData({
+      name: '',
+      language: '',
+      mobileNo: '',
+      district: '',
+      captchaCode: ''
+    });
+    refreshCaptcha();
+    setShowPledgeModal(false);
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+
+  //   if (!formData.name.trim()) {
+  //     alert('Please enter your name');
+  //     return;
+  //   }
+
+  //   if (!formData.mobileNo.trim()) {
+  //     alert('Please enter your mobile number');
+  //     return;
+  //   }
+
+  //   if (!/^\d{10}$/.test(formData.mobileNo.trim())) {
+  //     alert('Please enter a valid 10-digit mobile number');
+  //     return;
+  //   }
+
+  //   // if (!formData.state) {
+  //   //   alert('Please select your state');
+  //   //   return;
+  //   // }
+
+  //   if (!formData.language) {
+  //     alert('Please select a language');
+  //     return;
+  //   }
+
+  //   if (captcha.toUpperCase() !== formData.captchaCode.toUpperCase()) {
+  //     alert('Captcha code does not match');
+  //     setCaptcha(generateCaptcha());
+  //     setFormData(prev => ({ ...prev, captchaCode: '' }));
+  //     return;
+  //   }
+
+  //   generatePDF();
+  // };
 
   const refreshCaptcha = () => {
     const newCaptcha = generateCaptcha();
@@ -229,20 +382,318 @@ const PledgeSection = () => {
 
   return (
     <>
-     
-          <Card id="pledge" className="border-0 shadow-lg" style={{ borderRadius: '15px', overflow: 'hidden' }}>
 
 
-            <Card.Body className="p-3 bg-white">
-              <Form onSubmit={handleSubmit}>
-                {/* Full Width Fields */}
+      {/* <Container className="my-4">
+        <Row className="justify-content-center">
+          <Col lg={10} xl={8}>
+
+            <Card id="pledge" className="border-0 shadow-lg" style={{ borderRadius: '15px', overflow: 'hidden' }}>
 
 
-                <Row>
-                  {/* Left Column */}
-                  <Col md={6}>
+              <Card.Body className="p-3 bg-white">
+                <Form onSubmit={handleSubmit}>
+              
+
+
+                  <Row>
+                
+                    <Col md={12}>
+                      <Form.Group className="mb-2">
+                        <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
+                          Name <span className="text-danger">*</span>
+                        </Form.Label>
+                        <Form.Control
+                          type="text"
+                          name="name"
+                          placeholder="Your Name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          required
+                          style={{
+                            border: '1px solid #e0e0e0',
+                            borderRadius: '6px',
+                            padding: '0.35rem 0.5rem',
+                            fontSize: '0.85rem'
+                          }}
+                        />
+                      </Form.Group>
+                    </Col>      
+                                <Col md={6}>
+
+
+                      <Form.Group className="mb-2">
+                        <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
+                          Select Language <span className="text-danger">*</span>
+                        </Form.Label>
+                        <Form.Select
+                          name="language"
+                          value={formData.language}
+                          onChange={handleInputChange}
+                          required
+                          style={{
+                            border: '1px solid #e0e0e0',
+                            borderRadius: '6px',
+                            padding: '0.35rem 0.5rem',
+                            fontSize: '0.85rem'
+                          }}
+                        >
+                          <option value="">Select Language</option>
+                          <option value="English">English</option>
+                          <option value="हिन्दी">हिन्दी (Hindi)</option>
+                        </Form.Select>
+                      </Form.Group>
+                    </Col>
+
+                    <Col md={6}>
+                      <Form.Group className="mb-2">
+                        <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
+                          Mobile No. <span className="text-danger">*</span>
+                        </Form.Label>
+                        <Form.Control
+                          type="tel"
+                          name="mobileNo"
+                          placeholder="Enter Mobile Number"
+                          value={formData.mobileNo}
+                          onChange={handleInputChange}
+                          required
+                          maxLength="10"
+                          style={{
+                            border: '1px solid #e0e0e0',
+                            borderRadius: '6px',
+                            padding: '0.35rem 0.5rem',
+                            fontSize: '0.85rem'
+                          }}
+                        />
+                      </Form.Group>
+                    </Col>
+                    <Col md={6}>
+                      <Form.Group className="mb-2">
+                        <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
+                          District
+                        </Form.Label>
+                        <Form.Select
+                          name="district"
+                          value={formData.district}
+                          onChange={handleInputChange}
+                          style={{
+                            border: '1px solid #e0e0e0',
+                            borderRadius: '6px',
+                            padding: '0.35rem 0.5rem',
+                            fontSize: '0.85rem'
+                          }}
+                        >
+                          <option value="">Select District</option>
+                          <option value="Ajmer">Ajmer</option>
+                          <option value="Alwar">Alwar</option>
+                          <option value="Balotra">Balotra</option>
+                          <option value="Banswara">Banswara</option>
+                          <option value="Baran">Baran</option>
+                          <option value="Barmer">Barmer</option>
+                          <option value="Beawar">Beawar</option>
+                          <option value="Bharatpur">Bharatpur</option>
+                          <option value="Bhilwara">Bhilwara</option>
+                          <option value="Bikaner">Bikaner</option>
+                          <option value="Bundi">Bundi</option>
+                          <option value="Chittorgarh">Chittorgarh</option>
+                          <option value="Churu">Churu</option>
+                          <option value="Dausa">Dausa</option>
+                          <option value="Deeg">Deeg</option>
+                          <option value="Dholpur">Dholpur</option>
+                          <option value="Didwana-Kuchaman">Didwana-Kuchaman</option>
+                          <option value="Dungarpur">Dungarpur</option>
+                          <option value="Ganganagar">Ganganagar</option>
+                          <option value="Hanumangarh">Hanumangarh</option>
+                          <option value="Jaipur">Jaipur</option>
+                          <option value="Jaisalmer">Jaisalmer</option>
+                          <option value="Jalore">Jalore</option>
+                          <option value="Jhalawar">Jhalawar</option>
+                          <option value="Jhunjhunu">Jhunjhunu</option>
+                          <option value="Jodhpur">Jodhpur</option>
+                          <option value="Karauli">Karauli</option>
+                          <option value="Khairthal-Tijara">Khairthal-Tijara</option>
+                          <option value="Kota">Kota</option>
+                          <option value="Kotputli-Behror">Kotputli-Behror</option>
+                          <option value="Nagaur">Nagaur</option>
+                          <option value="Pali">Pali</option>
+                          <option value="Phalodi">Phalodi</option>
+                          <option value="Pratapgarh">Pratapgarh</option>
+                          <option value="Rajsamand">Rajsamand</option>
+                          <option value="Salumbar">Salumbar</option>
+                          <option value="Sawai Madhopur">Sawai Madhopur</option>
+                          <option value="Sikar">Sikar</option>
+                          <option value="Sirohi">Sirohi</option>
+                          <option value="Tonk">Tonk</option>
+                          <option value="Udaipur">Udaipur</option>
+                        </Form.Select>
+                      </Form.Group>
+
+                    </Col>
+                  </Row>
+
                   <Form.Group className="mb-2">
-                  <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
+                    <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
+                      Captcha Code
+                    </Form.Label>
+                    <div className="d-flex align-items-center gap-1">
+                      <div
+                        className="flex-grow-1 d-flex align-items-center justify-content-center p-1"
+                        style={{
+                          backgroundColor: '#f5f5f5',
+                          border: '1px solid #e0e0e0',
+                          borderRadius: '6px',
+                          fontSize: '1rem',
+                          fontWeight: 'bold',
+                          letterSpacing: '2px',
+                          color: '#b92022',
+                          minHeight: '32px'
+                        }}
+                      >
+                        {captcha}
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline-secondary"
+                        onClick={refreshCaptcha}
+                        style={{
+                          border: '1px solid #e0e0e0',
+                          borderRadius: '6px',
+                          padding: '0.35rem 0.5rem',
+                          fontSize: '0.75rem'
+                        }}
+                      >
+                        Refresh
+                      </Button>
+                    </div>
+                    <Form.Control
+                      type="text"
+                      name="captchaCode"
+                      placeholder="Enter Captcha Code"
+                      value={formData.captchaCode}
+                      onChange={handleInputChange}
+                      style={{
+                        border: '1px solid #e0e0e0',
+                        borderRadius: '6px',
+                        padding: '0.35rem 0.5rem',
+                        fontSize: '0.85rem',
+                        marginTop: '0.35rem',
+                        textTransform: 'uppercase'
+                      }}
+                    />
+                  </Form.Group>
+
+                  <div className="text-center mt-2">
+                    <Button
+                      variant="danger"
+                      type="submit"
+                      className="px-3 py-1 fw-bold"
+                      style={{
+                        background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
+                        border: 'none',
+                        borderRadius: '20px',
+                        fontSize: '0.85rem',
+                        boxShadow: '0 2px 8px rgba(185, 32, 34, 0.3)',
+                        transition: 'all 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.target.style.transform = 'translateY(-2px)';
+                        e.target.style.boxShadow = '0 4px 12px rgba(185, 32, 34, 0.4)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.target.style.transform = 'translateY(0)';
+                        e.target.style.boxShadow = '0 2px 8px rgba(185, 32, 34, 0.3)';
+                      }}
+                    >
+                      <FaCheckCircle className="me-1" size={12} /> Submit
+                    </Button>
+                  </div>
+                </Form>
+              </Card.Body>
+            </Card>
+          </Col>
+
+        </Row>
+
+      </Container>   */}
+
+
+
+
+
+
+      {/* Certificate Display Modal */}
+      <Modal
+        show={showCertificateModal}
+        onHide={() => setShowCertificateModal(false)}
+        centered
+        size="xl"
+        contentClassName="border-0 shadow-lg"
+      >
+        <Modal.Header
+          className="border-0 pb-2"
+          style={{
+            background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
+            color: 'white'
+          }}
+        >
+          <Modal.Title className="fw-bold">
+            Your Pledge Certificate
+          </Modal.Title>
+          <button
+            type="button"
+            className="btn-close btn-close-white"
+            onClick={() => setShowCertificateModal(false)}
+            aria-label="Close"
+          ></button>
+        </Modal.Header>
+        <Modal.Body className="p-0" style={{ backgroundColor: '#000' }}>
+          {certificateImage && (
+            <img
+              src={certificateImage}
+              alt="Certificate"
+              style={{ width: '100%', height: 'auto', display: 'block' }}
+            />
+          )}
+        </Modal.Body>
+        <Modal.Footer className="border-0 justify-content-center">
+          <Button
+            variant="success"
+            onClick={() => {
+              // Download certificate
+              const link = document.createElement('a');
+              link.href = certificateImage;
+              link.download = `Pledge_Certificate_${formData.name || 'User'}.jpg`;
+              link.click();
+            }}
+            className="px-4 py-2"
+            style={{
+              background: 'linear-gradient(135deg, #cd1d20 0%)',
+              border: 'none',
+              borderRadius: '25px',
+              fontWeight: 'bold'
+            }}
+          >
+            <FaDownload className="me-2"   /> Download Certificate
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+
+
+
+
+
+
+
+
+      <Card id="pledge" className="border-0 shadow-lg" style={{ borderRadius: '15px', overflow: 'hidden' }}>
+        <Card.Body className="p-5 bg-white">
+          <Form onSubmit={handleSubmits}>
+            <Row className="g-4">
+
+              <Col md={12}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-2" style={{ color: '#b92022', fontSize: '0.95rem' }}>
                     Name <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
@@ -254,223 +705,229 @@ const PledgeSection = () => {
                     required
                     style={{
                       border: '1px solid #e0e0e0',
-                      borderRadius: '6px',
-                      padding: '0.35rem 0.5rem',
-                      fontSize: '0.85rem'
+                      borderRadius: '8px',
+                      padding: '0.6rem 0.8rem',
+
+                      fontSize: '1rem'
                     }}
                   />
                 </Form.Group>
-                  </Col>                  <Col md={6}>
-                   
+              </Col>
 
-                    <Form.Group className="mb-2">
-                      <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
-                        Select Language <span className="text-danger">*</span>
-                      </Form.Label>
-                      <Form.Select
-                        name="language"
-                        value={formData.language}
-                        onChange={handleInputChange}
-                        required
-                        style={{
-                          border: '1px solid #e0e0e0',
-                          borderRadius: '6px',
-                          padding: '0.35rem 0.5rem',
-                          fontSize: '0.85rem'
-                        }}
-                      >
-                        <option value="">Select Language</option>
-                        <option value="English">English</option>
-                        <option value="हिन्दी">हिन्दी (Hindi)</option>                       
-                      </Form.Select>
-                    </Form.Group>
-                  </Col>
-
-                  {/* Right Column */}
-                  <Col md={6}>
-                    <Form.Group className="mb-2">
-                      <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
-                        Mobile No. <span className="text-danger">*</span>
-                      </Form.Label>
-                      <Form.Control
-                        type="tel"
-                        name="mobileNo"
-                        placeholder="Enter Mobile Number"
-                        value={formData.mobileNo}
-                        onChange={handleInputChange}
-                        required
-                        maxLength="10"
-                        style={{
-                          border: '1px solid #e0e0e0',
-                          borderRadius: '6px',
-                          padding: '0.35rem 0.5rem',
-                          fontSize: '0.85rem'
-                        }}
-                      />
-                    </Form.Group>
-                    </Col>
-                    <Col md={6}>
-                    <Form.Group className="mb-2">
-                      <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
-                        District
-                      </Form.Label>
-                      <Form.Select
-                        name="district"
-                        value={formData.district}
-                        onChange={handleInputChange}
-                        style={{
-                          border: '1px solid #e0e0e0',
-                          borderRadius: '6px',
-                          padding: '0.35rem 0.5rem',
-                          fontSize: '0.85rem'
-                        }}
-                      >
-                        <option value="">Select District</option>
-                        <option value="Ajmer">Ajmer</option>
-                        <option value="Alwar">Alwar</option>
-                        <option value="Balotra">Balotra</option>
-                        <option value="Banswara">Banswara</option>
-                        <option value="Baran">Baran</option>
-                        <option value="Barmer">Barmer</option>
-                        <option value="Beawar">Beawar</option>
-                        <option value="Bharatpur">Bharatpur</option>
-                        <option value="Bhilwara">Bhilwara</option>
-                        <option value="Bikaner">Bikaner</option>
-                        <option value="Bundi">Bundi</option>
-                        <option value="Chittorgarh">Chittorgarh</option>
-                        <option value="Churu">Churu</option>
-                        <option value="Dausa">Dausa</option>
-                        <option value="Deeg">Deeg</option>
-                        <option value="Dholpur">Dholpur</option>
-                        <option value="Didwana-Kuchaman">Didwana-Kuchaman</option>
-                        <option value="Dungarpur">Dungarpur</option>
-                        <option value="Ganganagar">Ganganagar</option>
-                        <option value="Hanumangarh">Hanumangarh</option>
-                        <option value="Jaipur">Jaipur</option>
-                        <option value="Jaisalmer">Jaisalmer</option>
-                        <option value="Jalore">Jalore</option>
-                        <option value="Jhalawar">Jhalawar</option>
-                        <option value="Jhunjhunu">Jhunjhunu</option>
-                        <option value="Jodhpur">Jodhpur</option>
-                        <option value="Karauli">Karauli</option>
-                        <option value="Khairthal-Tijara">Khairthal-Tijara</option>
-                        <option value="Kota">Kota</option>
-                        <option value="Kotputli-Behror">Kotputli-Behror</option>
-                        <option value="Nagaur">Nagaur</option>
-                        <option value="Pali">Pali</option>
-                        <option value="Phalodi">Phalodi</option>
-                        <option value="Pratapgarh">Pratapgarh</option>
-                        <option value="Rajsamand">Rajsamand</option>
-                        <option value="Salumbar">Salumbar</option>
-                        <option value="Sawai Madhopur">Sawai Madhopur</option>
-                        <option value="Sikar">Sikar</option>
-                        <option value="Sirohi">Sirohi</option>
-                        <option value="Tonk">Tonk</option>
-                        <option value="Udaipur">Udaipur</option>
-                      </Form.Select>
-                    </Form.Group>
-
-                  </Col>
-                </Row>
-
-                {/* Full Width Captcha Code */}
-                <Form.Group className="mb-2">
-                  <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
-                    Captcha Code
+              <Col md={6}>
+                <Form.Group className="mb-3">
+                  <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-2" style={{ color: '#b92022', fontSize: '0.95rem' }}>
+                    Select Language <span className="text-danger">*</span>
                   </Form.Label>
-                  <div className="d-flex align-items-center gap-1">
-                    <div 
-                      className="flex-grow-1 d-flex align-items-center justify-content-center p-1"
-                      style={{
-                        backgroundColor: '#f5f5f5',
-                        border: '1px solid #e0e0e0',
-                        borderRadius: '6px',
-                        fontSize: '1rem',
-                        fontWeight: 'bold',
-                        letterSpacing: '2px',
-                        color: '#b92022',
-                        minHeight: '32px'
-                      }}
-                    >
-                      {captcha}
-                    </div>
-                    <Button
-                      type="button"
-                      variant="outline-secondary"
-                      onClick={refreshCaptcha}
-                      style={{
-                        border: '1px solid #e0e0e0',
-                        borderRadius: '6px',
-                        padding: '0.35rem 0.5rem',
-                        fontSize: '0.75rem'
-                      }}
-                    >
-                      Refresh
-                    </Button>
-                  </div>
-                  <Form.Control
-                    type="text"
-                    name="captchaCode"
-                    placeholder="Enter Captcha Code"
-                    value={formData.captchaCode}
+                  <Form.Select
+                    name="language"
+                    value={formData.language}
                     onChange={handleInputChange}
+                    required
                     style={{
                       border: '1px solid #e0e0e0',
-                      borderRadius: '6px',
-                      padding: '0.35rem 0.5rem',
-                      fontSize: '0.85rem',
-                      marginTop: '0.35rem',
-                      textTransform: 'uppercase'
+                      borderRadius: '8px',
+                      padding: '0.6rem 0.8rem',
+                      fontSize: '1rem'
+                    }}
+                  >
+                    <option value="">Select Language</option>
+                    <option value="English">English</option>
+                    <option value="हिन्दी">हिन्दी (Hindi)</option>
+                  </Form.Select>
+                </Form.Group>
+              </Col>
+
+
+              <Col md={6}>
+                <Form.Group className="mb-3"> {/* Changed from mb-2 to mb-3 */}
+                  <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-2" style={{ color: '#b92022', fontSize: '0.95rem' }}> {/* Changed from 0.8rem to 0.95rem */}
+                    Mobile No. <span className="text-danger">*</span>
+                  </Form.Label>
+                  <Form.Control
+                    type="tel"
+                    name="mobileNo"
+                    placeholder="Enter Mobile Number"
+                    value={formData.mobileNo}
+                    onChange={handleInputChange}
+                    required
+                    maxLength="10"
+                    style={{
+                      border: '1px solid #e0e0e0',
+                      borderRadius: '8px',
+                      padding: '0.6rem 0.8rem',
+                      fontSize: '1rem'
                     }}
                   />
                 </Form.Group>
+              </Col>
 
-                <div className="text-center mt-2">
-                  <Button 
-                    variant="danger" 
-                    type="submit"
-                    className="px-3 py-1 fw-bold"
+              <Col md={12}>
+                <Form.Group className="mb-2">
+                  <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-1" style={{ color: '#b92022', fontSize: '0.8rem' }}>
+                    District
+                  </Form.Label>
+                  <Form.Select
+                    name="district"
+                    value={formData.district}
+                    onChange={handleInputChange}
+                    required
+                    maxLength="10"
                     style={{
-                      background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
-                      border: 'none',
-                      borderRadius: '20px',
-                      fontSize: '0.85rem',
-                      boxShadow: '0 2px 8px rgba(185, 32, 34, 0.3)',
-                      transition: 'all 0.3s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.target.style.transform = 'translateY(-2px)';
-                      e.target.style.boxShadow = '0 4px 12px rgba(185, 32, 34, 0.4)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.target.style.transform = 'translateY(0)';
-                      e.target.style.boxShadow = '0 2px 8px rgba(185, 32, 34, 0.3)';
+                      border: '1px solid #e0e0e0',
+                      borderRadius: '8px',
+                      padding: '0.6rem 0.8rem',
+                      fontSize: '1rem'
                     }}
                   >
-                    <FaCheckCircle className="me-1" size={12} /> Submit
-                  </Button>
+                    <option value="">Select District</option>
+                    <option value="Ajmer">Ajmer</option>
+                    <option value="Alwar">Alwar</option>
+                    <option value="Balotra">Balotra</option>
+                    <option value="Banswara">Banswara</option>
+                    <option value="Baran">Baran</option>
+                    <option value="Barmer">Barmer</option>
+                    <option value="Beawar">Beawar</option>
+                    <option value="Bharatpur">Bharatpur</option>
+                    <option value="Bhilwara">Bhilwara</option>
+                    <option value="Bikaner">Bikaner</option>
+                    <option value="Bundi">Bundi</option>
+                    <option value="Chittorgarh">Chittorgarh</option>
+                    <option value="Churu">Churu</option>
+                    <option value="Dausa">Dausa</option>
+                    <option value="Deeg">Deeg</option>
+                    <option value="Dholpur">Dholpur</option>
+                    <option value="Didwana-Kuchaman">Didwana-Kuchaman</option>
+                    <option value="Dungarpur">Dungarpur</option>
+                    <option value="Ganganagar">Ganganagar</option>
+                    <option value="Hanumangarh">Hanumangarh</option>
+                    <option value="Jaipur">Jaipur</option>
+                    <option value="Jaisalmer">Jaisalmer</option>
+                    <option value="Jalore">Jalore</option>
+                    <option value="Jhalawar">Jhalawar</option>
+                    <option value="Jhunjhunu">Jhunjhunu</option>
+                    <option value="Jodhpur">Jodhpur</option>
+                    <option value="Karauli">Karauli</option>
+                    <option value="Khairthal-Tijara">Khairthal-Tijara</option>
+                    <option value="Kota">Kota</option>
+                    <option value="Kotputli-Behror">Kotputli-Behror</option>
+                    <option value="Nagaur">Nagaur</option>
+                    <option value="Pali">Pali</option>
+                    <option value="Phalodi">Phalodi</option>
+                    <option value="Pratapgarh">Pratapgarh</option>
+                    <option value="Rajsamand">Rajsamand</option>
+                    <option value="Salumbar">Salumbar</option>
+                    <option value="Sawai Madhopur">Sawai Madhopur</option>
+                    <option value="Sikar">Sikar</option>
+                    <option value="Sirohi">Sirohi</option>
+                    <option value="Tonk">Tonk</option>
+                    <option value="Udaipur">Udaipur</option>
+                  </Form.Select>
+                </Form.Group>
+
+              </Col>
+
+
+
+            </Row>
+
+            <Form.Group className="mb-3">
+              <Form.Label className="fw-bold d-flex align-items-center gap-1 mb-2" style={{ color: '#b92022', fontSize: '0.95rem' }}>
+                Captcha Code
+              </Form.Label>
+              <div className="d-flex align-items-center gap-2">
+                <div
+                  className="flex-grow-1 d-flex align-items-center justify-content-center p-2"
+                  style={{
+                    backgroundColor: '#f5f5f5',
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '8px',
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold',
+                    letterSpacing: '3px',
+                    color: '#b92022',
+                    minHeight: '45px'
+                  }}
+                >
+                  {captcha}
                 </div>
-              </Form>
-            </Card.Body>
-          </Card>
-       
+                <Button
+                  type="button"
+                  variant="outline-secondary"
+                  onClick={refreshCaptcha}
+                  style={{
+                    border: '1px solid #e0e0e0',
+                    borderRadius: '8px',
+                    padding: '0.6rem 0.8rem',
+                    fontSize: '0.9rem'
+                  }}
+                >
+                  Refresh
+                </Button>
+              </div>
+              <Form.Control
+                type="text"
+                name="captchaCode"
+                placeholder="Enter Captcha Code"
+                value={formData.captchaCode}
+                onChange={handleInputChange}
+                style={{
+                  border: '1px solid #e0e0e0',
+                  borderRadius: '8px',
+                  padding: '0.6rem 0.8rem',
+                  fontSize: '1rem',
+                  marginTop: '0.5rem',
+                  textTransform: 'uppercase'
+                }}
+              />
+            </Form.Group>
+
+            <div className="text-center mt-4">
+              <Button
+                variant="danger"
+                type="submit"
+                className="px-5 py-2 fw-bold"
+                style={{
+                  background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
+                  border: 'none',
+                  borderRadius: '25px',
+                  fontSize: '1rem',
+                  boxShadow: '0 2px 8px rgba(185, 32, 34, 0.3)',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 4px 12px rgba(185, 32, 34, 0.4)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = '0 2px 8px rgba(185, 32, 34, 0.3)';
+                }}
+              >
+                <FaCheckCircle className="me-2" size={16} />
+                Submit
+              </Button>
+            </div>
+          </Form>
+        </Card.Body>
+      </Card>
 
       {/* Success Modal */}
-      <Modal 
-        show={showModal} 
-        onHide={() => setShowModal(false)} 
+      <Modal
+        show={showModal}
+        onHide={() => setShowModal(false)}
         centered
         className="certificate-modal"
         contentClassName="border-0 shadow-lg"
       >
-        <Modal.Header 
+        <Modal.Header
           className="border-0 d-flex justify-content-between align-items-center"
           style={{
             background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
             color: 'white'
           }}
         >
-          <Modal.Title className="fw-bold mb-0">Pledge Submitted Successfully</Modal.Title>
+          <Modal.Title className="fw-bold mb-0"></Modal.Title>
           <Button
             variant="link"
             onClick={() => setShowModal(false)}
@@ -480,18 +937,18 @@ const PledgeSection = () => {
             <FaTimes size={20} />
           </Button>
         </Modal.Header>
-        <Modal.Body 
+        <Modal.Body
           className="p-4"
-          style={{ 
+          style={{
             backgroundColor: '#FFEBEE'
           }}
         >
           <div className="text-center mb-4">
-            <FaCheckCircle size={60} style={{ color: '#b92022', marginBottom: '1rem' }} />
+            {/* <FaCheckCircle size={60} style={{ color: '#b92022', marginBottom: '1rem' }} />
             <h5 className="fw-bold mb-3" style={{ color: '#b92022' }}>
               Thank You for Taking the Pledge!
-            </h5>
-            <div 
+            </h5> */}
+            <div
               className="p-3 rounded"
               style={{
                 backgroundColor: 'white',
@@ -548,80 +1005,65 @@ const PledgeSection = () => {
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer 
+        <Modal.Footer
           className="border-0 d-flex justify-content-center flex-wrap gap-2"
-          style={{ 
+          style={{
             padding: '1.25rem 1.5rem',
             backgroundColor: '#FFEBEE'
           }}
         >
-      
-{!pledgeTaken ? (
-      <Button 
-        variant="danger" 
-        onClick={handleTakePledge}
-        className="d-flex align-items-center gap-2 px-5 py-2"
-        style={{ 
-          background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
-          border: 'none',
-          borderRadius: '25px',
-          fontSize: '1rem',
-          fontWeight: 'bold',
-          boxShadow: '0 3px 10px rgba(185, 32, 34, 0.3)'
-        }}
-      >
-        <FaHandHoldingHeart /> Take a Pledge
-      </Button>
-    ) : (
-      <>
-        <Button 
-          variant="danger" 
-          onClick={handleDownload}
-          className="d-flex align-items-center gap-2 px-5 py-2"
-          style={{ 
-            background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
-            border: 'none',
-            borderRadius: '25px',
-            fontSize: '1rem',
-            fontWeight: 'bold',
-            boxShadow: '0 3px 10px rgba(185, 32, 34, 0.3)',
-            animation: 'pulse 0.5s ease-in-out'
-          }}
-        >
-        <FaDownload /> Download Certificate
-        </Button>
 
-        <div className="d-flex align-items-center gap-2">
-          <Button
-            variant="light"
-            onClick={() => sharePledge("whatsapp")}
-            className="d-flex align-items-center justify-content-center"
-            style={{ width: 44, height: 44, borderRadius: 12 }}
-            title="Share on WhatsApp"
-          >
-            <i className="bi bi-whatsapp" style={{ fontSize: 20, color: "#25D366" }} />
-          </Button>
-          <Button
-            variant="light"
-            onClick={() => sharePledge("facebook")}
-            className="d-flex align-items-center justify-content-center"
-            style={{ width: 44, height: 44, borderRadius: 12 }}
-            title="Share on Facebook"
-          >
-            <i className="bi bi-facebook" style={{ fontSize: 20, color: "#1877F2" }} />
-          </Button>
-          <Button
-            variant="light"
-            onClick={() => sharePledge("instagram")}
-            className="d-flex align-items-center justify-content-center"
-            style={{ width: 44, height: 44, borderRadius: 12 }}
-            title="Share on Instagram"
-          >
-            <i className="bi bi-instagram" style={{ fontSize: 20, color: "#E1306C" }} />
-          </Button>
-        </div>
-      </>
-    )}
+          {!pledgeTaken ? (
+            <Button
+              variant="danger"
+              onClick={handleTakePledge}
+              className="d-flex align-items-center gap-2 px-5 py-2"
+              style={{
+                background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
+                border: 'none',
+                borderRadius: '25px',
+                fontSize: '1rem',
+                fontWeight: 'bold',
+                boxShadow: '0 3px 10px rgba(185, 32, 34, 0.3)'
+              }}
+            >
+              <FaHandHoldingHeart /> I Pledge
+            </Button>
+          ) : (
+            <>
+
+
+              <div className="d-flex align-items-center gap-2">
+                <Button
+                  variant="light"
+                  onClick={() => sharePledge("whatsapp")}
+                  className="d-flex align-items-center justify-content-center"
+                  style={{ width: 44, height: 44, borderRadius: 12 }}
+                  title="Share on WhatsApp"
+                >
+                  <i className="bi bi-whatsapp" style={{ fontSize: 20, color: "#25D366" }} />
+                </Button>
+                <Button
+                  variant="light"
+                  onClick={() => sharePledge("facebook")}
+                  className="d-flex align-items-center justify-content-center"
+                  style={{ width: 44, height: 44, borderRadius: 12 }}
+                  title="Share on Facebook"
+                >
+                  <i className="bi bi-facebook" style={{ fontSize: 20, color: "#1877F2" }} />
+                </Button>
+                <Button
+                  variant="light"
+                  onClick={() => sharePledge("instagram")}
+                  className="d-flex align-items-center justify-content-center"
+                  style={{ width: 44, height: 44, borderRadius: 12 }}
+                  title="Share on Instagram"
+                >
+                  <i className="bi bi-instagram" style={{ fontSize: 20, color: "#E1306C" }} />
+                </Button>
+              </div>
+            </>
+          )}
         </Modal.Footer>
       </Modal>
     </>

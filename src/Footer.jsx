@@ -19,11 +19,11 @@ import BalVivahChatbot from "./chatbox";
 
 const Footer = () => {
   return (
-    <footer className="bg-dark text-white py-5">
+    <footer className="bg-dark text-white py-2">
       <Container>
         <Row>
           {/* LEFT COLUMN */}
-          <Col lg={4} className="mb-4">
+          <Col lg={4} className="mb-2">
             <h5 className="fw-bold mb-3 text-warning">
               Bal Vivah Mukt Rajasthan
             </h5>
@@ -69,7 +69,7 @@ const Footer = () => {
           </Col>
 
           {/* MIDDLE COLUMN */}
-          <Col lg={4} className="mb-4">
+          <Col lg={4} className="mb-2">
             <h5 className="fw-bold mb-3 text-warning">Quick Links</h5>
 
             <Row>

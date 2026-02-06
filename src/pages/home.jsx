@@ -6,6 +6,7 @@ import slider from '../assets/images/bg3.jpg'
 import bg4 from '../assets/images/bg4.jpg'
 import bg5 from '../assets/images/bg5.jpg'
 import bg6 from '../assets/images/bg6.jpg'
+import video from '../assets/images/vd.mp4'
 
 import { FaEnvelope, FaHandHoldingHeart, FaTimes } from "react-icons/fa";
 
@@ -105,14 +106,14 @@ function HeroSection() {
     setFormData(prev => ({ ...prev, captchaCode: '' }));
   };
 
-    const slides = [
-          { id: 0, image: slider_one },
-          { id: 1, image: slider_two },
-          { id: 2, image: slider },
-          { id: 3, image: bg4 },
-          { id: 4, image: bg5 },
-          { id: 5, image: bg6 }
-        ];
+  const slides = [
+    { id: 0, image: slider_one },
+    { id: 1, image: slider_two },
+    { id: 2, image: slider },
+    { id: 3, image: bg4 },
+    { id: 4, image: bg5 },
+    { id: 5, image: bg6 }
+  ];
 
   // What's New items for infinite scroll
   const whatsNewItems = [
@@ -214,7 +215,7 @@ function HeroSection() {
   return (
     <>
       {/* She-Box Sliding Banner */}
-      <div 
+      <div
         className="she-box-banner"
         style={{
           backgroundColor: '#ffffff',
@@ -225,7 +226,7 @@ function HeroSection() {
           whiteSpace: 'nowrap'
         }}
       >
-        <div 
+        <div
           className="she-box-slider-wrapper"
           style={{
             display: 'inline-flex',
@@ -255,7 +256,7 @@ function HeroSection() {
             }}
           >
             <FaInfoCircle size={16} />
-            <strong>She-Box is live now.</strong> If you are facing any workplace related sexual harassment, please file your complaint here - 
+            <strong>She-Box is live now.</strong> If you are facing any workplace related sexual harassment, please file your complaint here -
             <strong> SHe-Box | MINISTRY OF WOMEN & CHILD DEVELOPMENT | GOI</strong>
           </a>
           {/* Duplicate for seamless loop */}
@@ -281,7 +282,7 @@ function HeroSection() {
             }}
           >
             <FaInfoCircle size={16} />
-            <strong>She-Box is live now.</strong> If you are facing any workplace related sexual harassment, please file your complaint here - 
+            <strong>She-Box is live now.</strong> If you are facing any workplace related sexual harassment, please file your complaint here -
             <strong> SHe-Box | MINISTRY OF WOMEN & CHILD DEVELOPMENT | GOI</strong>
           </a>
         </div>
@@ -290,9 +291,9 @@ function HeroSection() {
       <section className="hero-sections text-white text-center position-relative" style={{ minHeight: '380px' }}>
         <Container>
           <Row className="align-items-stretch">
-          
-            <Col lg={9} xs={12}  className="position-relative" style={{  minHeight: '280px', minHeight: '380px' }}>
-             
+
+            <Col lg={9} xs={12} className="position-relative" style={{ minHeight: '280px', minHeight: '380px' }}>
+
               <div className="hero-slider pt-2" style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
                 {slides.map((slide) => (
                   <div
@@ -303,7 +304,7 @@ function HeroSection() {
                 ))}
               </div>
 
-       
+
               <div className="hero-slider-controls">
                 <button
                   className="hero-slider-prev"
@@ -334,8 +335,8 @@ function HeroSection() {
             </Col>
 
             <Col lg={3} id="pledge" className="py-1">
-            <Card className="border-0 shadow-sm h-100 bg-white" style={{ borderRadius: '12px' }}>
-                <Card.Header 
+              <Card className="border-0 shadow-sm h-100 bg-white" style={{ borderRadius: '12px' }}>
+                <Card.Header
                   className="border-0 py-2"
                   style={{
                     background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
@@ -346,7 +347,7 @@ function HeroSection() {
                   <h5 className="mb-0 fw-bold text-center" style={{ fontSize: '1rem' }}>What's New </h5>
                 </Card.Header>
                 <Card.Body className="p-3 " style={{ maxHeight: '300px', position: 'relative', overflow: 'hidden' }}>
-                  <div 
+                  <div
                     className="whats-new-scroll-container"
                     style={{
                       position: 'relative',
@@ -355,7 +356,7 @@ function HeroSection() {
                     }}
                   >
                     <div className="whats-new-scroll-wrapper">
-                 
+
                       {whatsNewItems.map((item, index) => (
                         <div
                           key={`first-${index}`}
@@ -369,9 +370,9 @@ function HeroSection() {
                           }}
                         >
                           <div className="d-flex align-items-start gap-2">
-                            <span 
-                              style={{ 
-                                color: '#b92022', 
+                            <span
+                              style={{
+                                color: '#b92022',
                                 fontSize: '0.7rem',
                                 marginTop: '0.2rem',
                                 flexShrink: 0
@@ -396,9 +397,9 @@ function HeroSection() {
                           }}
                         >
                           <div className="d-flex align-items-start gap-2">
-                            <span 
-                              style={{ 
-                                color: '#b92022', 
+                            <span
+                              style={{
+                                color: '#b92022',
                                 fontSize: '0.7rem',
                                 marginTop: '0.2rem',
                                 flexShrink: 0
@@ -417,7 +418,7 @@ function HeroSection() {
             </Col>
           </Row>
         </Container>
-      </section> 
+      </section>
 
 
 
@@ -439,27 +440,27 @@ function HeroSection() {
           <Row className="align-items-start">
             {/* Left Section - About Us */}
             <Col lg={9} className="mb-3 mb-lg-0">
-            <h5 className="mb-0 fw-bold mt-3" style={{ fontSize: '1rem' }}>About Us</h5>
-            <p className="mb-2" style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#333' }}>
-                    <strong>बाल विवाह मुक्त राजस्थान</strong> is a comprehensive initiative by the Government of Rajasthan 
-                    to eliminate child marriage and protect children's rights across the state.
-                  </p>
-                  <p className="mb-2" style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#333' }}>
-                    Our mission is to create awareness, provide support, and take legal action against child marriage 
-                    through coordinated efforts with government departments, NGOs, and communities.
-                  </p>
-                  <p className="mb-0" style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#333' }}>
-                    We work towards ensuring every child has the right to education, health, and a bright future 
-                    free from the harmful practice of child marriage.
-                  </p>
-                  <p className="mb-0" style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#333' }}>The Bal Vivah Mukt Rajasthan (BVMR) mission is a comprehensive initiative aimed at eliminating child marriage from the state of Rajasthan. Launched under the guidance of the Government of Rajasthan, this mission seeks to protect the rights of children, particularly girls, and ensure they receive proper education and opportunities for development.
+              <h5 className="mb-0 fw-bold mt-3" style={{ fontSize: '1rem' }}>About Us</h5>
+              <p className="mb-2" style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#333' }}>
+                <strong>बाल विवाह मुक्त राजस्थान</strong> is a comprehensive initiative by the Government of Rajasthan
+                to eliminate child marriage and protect children's rights across the state.
+              </p>
+              <p className="mb-2" style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#333' }}>
+                Our mission is to create awareness, provide support, and take legal action against child marriage
+                through coordinated efforts with government departments, NGOs, and communities.
+              </p>
+              <p className="mb-0" style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#333' }}>
+                We work towards ensuring every child has the right to education, health, and a bright future
+                free from the harmful practice of child marriage.
+              </p>
+              <p className="mb-0" style={{ fontSize: '0.9rem', lineHeight: '1.6', color: '#333' }}>The Bal Vivah Mukt Rajasthan (BVMR) mission is a comprehensive initiative aimed at eliminating child marriage from the state of Rajasthan. Launched under the guidance of the Government of Rajasthan, this mission seeks to protect the rights of children, particularly girls, and ensure they receive proper education and opportunities for development.
 
-Child marriage is a serious violation of human rights that affects millions of children worldwide. In Rajasthan, this practice has been prevalent due to various socio-economic factors, traditional beliefs, and lack of awareness. The BVMR mission addresses these challenges through a multi-pronged approach involving legal measures, awareness campaigns, and community participation.</p>
+                Child marriage is a serious violation of human rights that affects millions of children worldwide. In Rajasthan, this practice has been prevalent due to various socio-economic factors, traditional beliefs, and lack of awareness. The BVMR mission addresses these challenges through a multi-pronged approach involving legal measures, awareness campaigns, and community participation.</p>
             </Col>
 
             {/* Right Section - What's New */}
             <Col lg={3}>
-             
+
               {/* <PledgeSection/> */}
             </Col>
 
@@ -467,13 +468,13 @@ Child marriage is a serious violation of human rights that affects millions of c
         </Container>
       </section>
 
-      <StatsCards/>
+      <StatsCards />
 
 
       {/* -------------------------------------report section ----------------------------------- */}
 
 
-{/* 
+      {/* 
       <section id="report" className="py-5">
         <Container>
    
@@ -983,19 +984,19 @@ Child marriage is a serious violation of human rights that affects millions of c
       </section> */}
 
       {/* Success Modal */}
-      <Modal 
-        show={showSuccessModal} 
+      <Modal
+        show={showSuccessModal}
         onHide={() => setShowSuccessModal(false)}
         centered
         contentClassName="border-0 shadow-lg"
       >
-        <Modal.Body 
+        <Modal.Body
           className="text-center p-4"
           style={{ backgroundColor: '#fff' }}
         >
           <div className="mb-3">
-            <FaCheckCircle 
-              size={64} 
+            <FaCheckCircle
+              size={64}
               style={{ color: '#28a745' }}
             />
           </div>
@@ -1008,7 +1009,7 @@ Child marriage is a serious violation of human rights that affects millions of c
           <p className="mb-0" style={{ fontSize: '1rem', color: '#666' }}>
             Your report number is:
           </p>
-          <div 
+          <div
             className="mt-2 p-3 rounded"
             style={{
               backgroundColor: '#FFEBEE',
@@ -1025,8 +1026,8 @@ Child marriage is a serious violation of human rights that affects millions of c
           </p>
         </Modal.Body>
         <Modal.Footer className="border-0 justify-content-center">
-          <Button 
-            variant="danger" 
+          <Button
+            variant="danger"
             onClick={() => setShowSuccessModal(false)}
             className="px-4 py-2"
             style={{
@@ -1040,16 +1041,16 @@ Child marriage is a serious violation of human rights that affects millions of c
         </Modal.Footer>
       </Modal>
 
-      {/* Video Modal - Auto-opens on page load */}
-      <Modal 
-        show={showVideoModal} 
+    
+      {/* <Modal
+        show={showVideoModal}
         onHide={handleCloseVideoModal}
         centered
         size="lg"
         contentClassName="border-0 shadow-lg"
         backdrop="static"
       >
-        <Modal.Header 
+        <Modal.Header
           className="border-0 pb-2"
           style={{
             background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
@@ -1068,6 +1069,9 @@ Child marriage is a serious violation of human rights that affects millions of c
         </Modal.Header>
         <Modal.Body className="p-0" style={{ backgroundColor: '#000' }}>
           <div className="position-relative" style={{ paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
+       
+
+
             <video
               ref={videoRef}
               controls
@@ -1078,17 +1082,65 @@ Child marriage is a serious violation of human rights that affects millions of c
                 position: 'absolute',
                 top: 0,
                 left: 0,
-                width: '100%',
-                height: '100%',
+                width: '100vh',
+                height: '100vh',
                 objectFit: 'contain'
               }}
             >
-              <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
+              <source src={video} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
           </div>
         </Modal.Body>
-      </Modal>
+      </Modal> */}
+      <Modal
+  show={showVideoModal}
+  onHide={handleCloseVideoModal}
+  centered
+  size="lg"
+  contentClassName="border-0 shadow-lg"
+  backdrop="static"
+>
+  <Modal.Header
+    className="border-0 pb-2"
+    style={{
+      background: 'linear-gradient(135deg, #b92022 0%, #d32f2f 100%)',
+      color: 'white'
+    }}
+  >
+    <Modal.Title className="fw-bold">
+      Child Marriage Prevention Awareness
+    </Modal.Title>
+    <button
+      type="button"
+      className="btn-close btn-close-white"
+      onClick={handleCloseVideoModal}
+      aria-label="Close"
+    ></button>
+  </Modal.Header>
+  <Modal.Body className="p-0" style={{ backgroundColor: '#000' }}>
+    <div className="position-relative" style={{ paddingBottom: '56.25%', height: 0, overflow: 'hidden' }}>
+      <video
+        ref={videoRef}
+        controls
+        autoPlay
+        muted
+        playsInline
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100vh',      // Changed from '100vh'
+          height: '100%',     // Changed from '100vh'
+          objectFit: 'contain'
+        }}
+      >
+        <source src={video} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </Modal.Body>
+</Modal>
 
     </>
   );

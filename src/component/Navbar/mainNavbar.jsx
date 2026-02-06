@@ -17,6 +17,7 @@ const MainNavbar = () => {
         className="main-navbar"
         collapseOnSelect
       >
+        
         <Container className="navbar-container">
           <Navbar.Toggle aria-controls="navbarNav" className="navbar-toggler-custom" />
           <Navbar.Collapse id="navbarNav">
@@ -36,8 +37,13 @@ const MainNavbar = () => {
                 id="resource-dropdown"
                 className="nav-dropdown-custom"
               >
+
+
+                  <NavDropdown.Item as={Link} to="/admin">
+              admin   
+                </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/supreme-court-judgement-2024">
-                  Supreme Court Judgement of 2024
+                  Supreme Court Judgement of 2024   
                 </NavDropdown.Item>
                 <NavDropdown.Item as={Link} to="/rajasthan-action-plan-2025">
                   Rajasthan State Action Plan 2025
@@ -102,14 +108,18 @@ const MainNavbar = () => {
               </Nav.Link>
             </Nav>
 
-            <Nav className="navbar-nav-right">
+            <Nav className="navbar-nav-left">
               <Nav.Link
                 as={Link}
                 to="/report_chile_marriage"
                 className={`nav-link-custom nav-link-report ${isActive("/report_chile_marriage") ? "active" : ""}`}
+
+
+
               >
                 Report Child Marriage
               </Nav.Link>
+
               <Nav.Link
                 as={Link}
                 to="#"
@@ -117,9 +127,9 @@ const MainNavbar = () => {
                   e.preventDefault();
                   setShowPledgeModal(true);
                 }}
-                className="nav-link-custom nav-link-report"
+                className="nav-link-custom nav-link-report" 
               >
-                Take the Pledge
+                Take Pledge
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>

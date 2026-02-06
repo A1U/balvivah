@@ -57,135 +57,19 @@ const DCPUTable = () => {
   );
 
   return (
-    <Container fluid className="py-4">
-      <style>{`
-        .table-container {
-          background: white;
-          border-radius: 8px;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-          overflow: hidden;
-        }
-        
-        .header-section {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          padding: 2rem;
-          text-align: center;
-        }
-        
-        .header-section h2 {
-          margin: 0;
-          font-size: 1.75rem;
-          font-weight: 600;
-        }
-        
-        .header-section p {
-          margin: 0.5rem 0 0 0;
-          opacity: 0.9;
-        }
-        
-        .search-section {
-          padding: 1.5rem;
-          background: #f8f9fa;
-          border-bottom: 1px solid #dee2e6;
-        }
-        
-        .table-responsive {
-          margin: 0;
-        }
-        
-        .custom-table {
-          margin: 0;
-          font-size: 0.95rem;
-        }
-        
-        .custom-table thead {
-          background: #495057;
-          color: white;
-          position: sticky;
-          top: 0;
-          z-index: 10;
-        }
-        
-        .custom-table thead th {
-          font-weight: 600;
-          border: none;
-          padding: 1rem 0.75rem;
-          white-space: nowrap;
-        }
-        
-        .custom-table tbody tr {
-          transition: background-color 0.2s;
-        }
-        
-        .custom-table tbody tr:hover {
-          background-color: #f1f3f5;
-        }
-        
-        .custom-table tbody td {
-          padding: 0.875rem 0.75rem;
-          vertical-align: middle;
-          border-color: #e9ecef;
-        }
-        
-        .email-link {
-          color: #667eea;
-          text-decoration: none;
-          word-break: break-all;
-        }
-        
-        .email-link:hover {
-          text-decoration: underline;
-        }
-        
-        .mobile-number {
-          font-family: 'Courier New', monospace;
-          font-weight: 500;
-        }
-        
-        .no-results {
-          text-align: center;
-          padding: 3rem;
-          color: #6c757d;
-        }
-        
-        @media (max-width: 768px) {
-          .header-section h2 {
-            font-size: 1.25rem;
-          }
-          
-          .custom-table {
-            font-size: 0.85rem;
-          }
-          
-          .custom-table thead th,
-          .custom-table tbody td {
-            padding: 0.5rem 0.4rem;
-          }
-        }
-        
-        @media (max-width: 576px) {
-          .header-section {
-            padding: 1.5rem 1rem;
-          }
-          
-          .search-section {
-            padding: 1rem;
-          }
-          
-          .custom-table {
-            font-size: 0.75rem;
-          }
-        }
-      `}</style>
+    <Container fluid className="py-4 bcg">
+
+
+
+
 
       <div className="table-container">
         <div className="header-section">
-          <h2>राजस्थान DCPU कार्यालय संपर्क सूची</h2>
-          <p>Rajasthan District Child Protection Unit Contact Directory</p>
+          <h2>जिला  DCPU कार्यालय संपर्क सूची</h2>
+          {/* <p>Rajasthan District Child Protection Unit Contact Directory</p> */}
         </div>
 
-        <div className="search-section">
+        {/* <div className="search-section">
           <InputGroup>
             <InputGroup.Text>
               <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
@@ -199,7 +83,7 @@ const DCPUTable = () => {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </InputGroup>
-        </div>
+        </div> */}
 
         <div className="table-responsive">
           {filteredData.length > 0 ? (
@@ -226,7 +110,8 @@ const DCPUTable = () => {
                       </a>
                     </td>
                   </tr>
-                ))}
+                )
+                )}
               </tbody>
             </Table>
           ) : (
@@ -245,7 +130,10 @@ const DCPUTable = () => {
       <div className="text-center mt-3 text-muted">
         <small>कुल जिले: {filteredData.length} / {dcpuData.length}</small>
       </div>
-    </Container>
+</Container> 
+
+  
+
   );
 };
 
